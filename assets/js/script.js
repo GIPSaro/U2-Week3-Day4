@@ -41,7 +41,17 @@ function displayImages(images) {
     imgContainer.classList.add("d-flex", "justify-content-center");
 
     const imgAnchor = document.createElement("a");
-    imgAnchor.href = "";
+    imgAnchor.href = "#";
+    imgAnchor.onclick = function () {
+      // Passa i dettagli dell'immagine alla pagina dei dettagli
+      const imageDetails = {
+        src: image.src.large,
+        photographer: image.photographer,
+        photographer_url: image.photographer_url,
+      };
+      sessionStorage.setItem("imageDetails", JSON.stringify(imageDetails));
+      window.location.href = "imageDetails.html"; // reindirizza alla pagina dei dettagli
+    };
 
     const img = document.createElement("img");
     img.className = "card-body";
@@ -170,3 +180,13 @@ searchButton.onclick = function () {
       displayImages(searchResults.photos);
     });
 };
+document.addEventListener("DOMContentLoaded", function () {
+  const imageDetails = JSON.parse(sessionStorage.getItem("imageDetails"));
+  if (imageDetails) {
+    document.getElementById("image").src = imageDetails.src.large;
+    document.getElementById("photographer").textContent =
+      imageDetails.photographer;
+    document.getElementById("photographer_url").href =
+      imageDetails.photographer_url;
+  }
+});
